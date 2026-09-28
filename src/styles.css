@@ -103,8 +103,6 @@ p { margin: 0 0 1em; }
   border-bottom-color: rgba(255,255,255,0.12);
   background: #000;
 }
-.site-header .primary-nav a { color: rgba(255,255,255,0.85); }
-.site-header .primary-nav a:hover { color: #fff; }
 .site-header .nav-toggle span { background: #fff; }
 .site-header .brand { color: #fff; }
 .nav-wrap {
@@ -130,24 +128,18 @@ p { margin: 0 0 1em; }
 }
 
 .primary-nav { display: flex; align-items: center; gap: 28px; }
-.primary-nav a {
+.primary-nav a:not(.nav-cta) {
   color: var(--slate-700); font-weight: 500; font-size: 15px;
   position: relative;
 }
-.primary-nav a:hover { color: var(--navy-900); }
-.primary-nav a:not(.nav-cta)::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: -6px;
-  height: 2px; background: var(--blue-600); transform: scaleX(0);
-  transform-origin: left; transition: transform var(--t-base) var(--ease);
-}
-.primary-nav a:not(.nav-cta):hover::after { transform: scaleX(1); }
+.primary-nav a:not(.nav-cta):hover { color: var(--navy-900); }
 .nav-cta {
-  background: var(--navy-900); color: #fff !important;
+  background: var(--navy-900); color: #fff;
   padding: 9px 16px; border-radius: 999px;
   font-weight: 600; font-size: 14px;
-  transition: background var(--t-fast), transform var(--t-fast);
+  transition: background var(--t-fast), transform var(--t-fast), color var(--t-fast);
 }
-.nav-cta:hover { background: var(--blue-600); transform: translateY(-1px); }
+.nav-cta:hover { background: var(--blue-600); color: #fff; transform: translateY(-1px); }
 
 .nav-toggle { display: none; flex-direction: column; gap: 5px; padding: 8px; }
 .nav-toggle span {
@@ -158,20 +150,49 @@ p { margin: 0 0 1em; }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* Desktop bar: dark surface, light type, underline on text links only. */
+@media (min-width: 881px) {
+  .site-header .primary-nav a:not(.nav-cta) { color: rgba(255,255,255,0.85); }
+  .site-header .primary-nav a:not(.nav-cta):hover { color: #fff; }
+  .primary-nav a:not(.nav-cta)::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -6px;
+    height: 2px; background: var(--blue-600); transform: scaleX(0);
+    transform-origin: left; transition: transform var(--t-base) var(--ease);
+  }
+  .primary-nav a:not(.nav-cta):hover::after { transform: scaleX(1); }
+}
+
+/* Mobile sheet: a light surface under the bar. Colour follows the sheet, not the bar. */
 @media (max-width: 880px) {
   .nav-toggle { display: flex; }
   .primary-nav {
-    position: absolute; top: 72px; left: 0; right: 0;
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 40;
     flex-direction: column; align-items: stretch; gap: 0;
-    background: #fff; border-bottom: 1px solid var(--slate-200);
-    padding: 8px 0; transform: translateY(-12px);
-    opacity: 0; pointer-events: none; transition: all var(--t-base);
+    background: var(--bg); color: var(--ink);
+    border-bottom: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-md);
+    padding: 8px 0 12px;
+    transform: translateY(-8px);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: transform var(--t-base) var(--ease), opacity var(--t-base), visibility var(--t-base);
   }
-  .primary-nav.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  .primary-nav a {
-    padding: 14px var(--gutter); border-top: 1px solid var(--slate-100);
+  .primary-nav.open {
+    transform: none; opacity: 1; visibility: visible; pointer-events: auto;
   }
-  .nav-cta { margin: 12px var(--gutter); text-align: center; }
+  .site-header .primary-nav a:not(.nav-cta) {
+    color: var(--ink);
+    padding: 14px var(--gutter);
+    border-bottom: 1px solid var(--slate-200);
+  }
+  .site-header .primary-nav a:not(.nav-cta):hover,
+  .site-header .primary-nav a:not(.nav-cta):focus-visible {
+    color: var(--navy-900);
+    background: var(--bg-soft);
+  }
+  .primary-nav .nav-cta {
+    margin: 12px var(--gutter) 4px;
+    text-align: center;
+  }
 }
 
 /* ───────── hero ───────── */
